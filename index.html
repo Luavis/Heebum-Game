@@ -36,6 +36,25 @@
         padding-right: 10px;
         font-size: 20px;
     }
+    #finish-stage {
+        background: url(./flake.jpg);
+        width: 320px;
+        height: 240px;
+        background-size: cover;
+        margin: 0 auto;
+    }
+
+    #finish-stage h2 {
+        text-align: center;
+    }
+
+    #finish-stage div {
+        text-align: center;
+        color: red;
+        font-weight: bold;
+        font-size: 20pxs;
+        margin-top: 100px;
+    }
     </style>
 </head>
 <body>
@@ -59,7 +78,7 @@
         for(var i = 0; i < 5; i++) {
             var top = (Math.random() * -10);
 
-            $('#background').append($('<img src="./flake.png" class="flake" width="20">').css({
+            $('#background').append($('<img src="./flake.jpg" class="flake" width="100">').css({
                 'left': ((Math.random() * 100) + '%'), 
                 'top':  (top + '%')
                 }).animate({
@@ -71,6 +90,10 @@
     }, 300);
 
     var timer = setInterval(function() {
+        if(flag) {
+            return;
+        }
+
         var red = Math.floor(Math.random() * 255);
         var green = Math.floor(Math.random() * 255);
         var blue = Math.floor(Math.random() * 255);
@@ -80,10 +103,11 @@
 
     $(document).keydown(function(e) {
 
-        var velocity = 15;
+        var velocity = 50;
 
-        if(flag) {
-            return;
+        if(e.keyCode == 32 && flag)  {
+            $('#finish-stage').remove();
+            flag = false;
         }
 
         if(e.keyCode == 37) { // left
@@ -125,7 +149,17 @@
         $('#sec-val').text((Date.now() - startTime) / 1000);
 
         if(collision.length != 0) {
-            alert("ゲーム エンド!!\n" + Math.floor((Date.now() - startTime) / 1000) + '点');
+            flag = true;
+
+            $('#background').append($('<div id="finish-stage">' 
+                + '<h2>Too much applications!!</h2>'
+                + '<div>'
+                + 'ゲーム エンド!! <br>'
+                + Math.floor((Date.now() - startTime) / 1000) + '点<br><br>'
+                + 'press &lt;space&gt; to replay'
+                + '</div>'
+            + '</div>'));
+
             startTime = Date.now();
 
             $('.flake').remove();
